@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which pages will lose clicks next month? A decision-support score for content review</title>
+<meta name="description" content="A time-aware evaluation of a page-level score for prioritizing content review using Google Search Console performance data.">
+<meta name="theme-color" content="#f6f7f9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--ink:#1b2430;--mute:#5d6877;--line:#d9dde4;--model:#0b6e6e;--base:#9aa3b0;--risk:#b4531a;--card:#fff;--soft:#e9f2f1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.72 Literata,Georgia,serif}
+main{max-width:48rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}h1,h2,h3,.ui,th,figcaption,nav,.byline,.eyebrow,.hero b,.metric strong{font-family:"Instrument Sans",system-ui,sans-serif}
+h1{font-size:clamp(2rem,5.5vw,3rem);line-height:1.12;margin:.3em 0 .45em;letter-spacing:-.035em}h2{font-size:1.42rem;line-height:1.3;margin:3.1rem 0 .65rem;padding-top:1.05rem;border-top:1px solid var(--line);letter-spacing:-.015em}h3{font-size:1.05rem;line-height:1.4;margin:1.7rem 0 .35rem}p{margin:.7rem 0 1rem}li{margin:.35rem 0}.byline{color:var(--mute);font-size:.9rem}.eyebrow{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--model);font-weight:700}.hero{margin:1.8rem 0 2.1rem;padding:1.3rem 0;border-top:3px solid var(--ink);border-bottom:1px solid var(--line)}.hero b{display:block;font-size:clamp(2.3rem,8vw,3.7rem);line-height:1.1;color:var(--risk);letter-spacing:-.04em}.hero span{display:block;color:var(--mute);font-size:.95rem;margin-top:.5rem}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:1.4rem 0}.metric{background:var(--card);border:1px solid var(--line);padding:.9rem;border-radius:8px}.metric strong{display:block;font-size:1.45rem;line-height:1.2;letter-spacing:-.03em}.metric span{display:block;color:var(--mute);font: .8rem/1.45 "Instrument Sans",system-ui,sans-serif;margin-top:.4rem}figure{margin:1.6rem 0 2rem;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem .8rem .7rem}figcaption{font-size:.82rem;color:var(--mute);margin-top:.75rem;line-height:1.5}.chart{width:100%;height:auto;display:block;font-family:"Instrument Sans",system-ui,sans-serif}.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--card);margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{text-align:left;padding:.55rem .65rem;border-bottom:1px solid var(--line);vertical-align:top}th{font-weight:600;font-size:.78rem;color:var(--mute);background:#f0f2f5}tr:last-child td{border-bottom:0}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.note{background:var(--card);border-left:3px solid var(--risk);padding:.8rem 1rem;margin:1.2rem 0;font-size:.93rem}.callout{background:var(--soft);padding:1rem 1.1rem;border-radius:8px;font-size:.95rem}.tag{display:inline-block;font:600 .75rem "Instrument Sans",sans-serif;padding:.18rem .48rem;border-radius:4px;background:#e9ecf1;color:var(--ink)}a{color:var(--model);text-underline-offset:3px}code{font-size:.84em;background:#e9ecf1;padding:.12em .3em;border-radius:3px;overflow-wrap:anywhere}a:focus-visible{outline:3px solid var(--model);outline-offset:3px}.footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--mute);font: .82rem/1.6 "Instrument Sans",system-ui,sans-serif}.small{font-size:.9rem;color:var(--mute)}nav{font-size:.82rem;display:flex;flex-wrap:wrap;gap:.8rem;margin:1rem 0 1.5rem}nav a{text-decoration:none}@media(max-width:520px){body{font-size:16px}main{padding:1.5rem 1rem 3rem}.metrics{grid-template-columns:1fr}.metric{display:flex;align-items:center;justify-content:space-between;gap:1rem}.metric strong{font-size:1.25rem}.metric span{max-width:60%;text-align:right}}
+</style>
+</head>
+<body><main>
+<p class="eyebrow">FlyRank ML Internship · Lane 2</p>
+<h1>Which pages will lose clicks next month?</h1>
+<p class="byline">A decision-support score for content review · Subhrajeet Mahapatra · October 2026</p>
+<nav aria-label="Paper sections"><a href="#problem">Problem</a><a href="#data">Data</a><a href="#method">Method</a><a href="#results">Results</a><a href="#playbook">Action playbook</a><a href="#repro">Reproducibility</a></nav>
+
+<h2 style="border:0;margin-top:1.4rem;padding:0">Abstract</h2>
+<p>Content teams need a repeatable way to prioritize pages for review rather than inspect every page manually. This study asks whether a page’s next-30-day click trend will fall at least 25% more than its client’s overall click trend, relative to the previous 30 days. I built a page-level panel from the FlyRank Google Search Console warehouse and compared simple baselines with logistic-regression and gradient-boosting models using features available at six monthly cutoffs. In the May–June forward test, a lean logistic model achieved a PR-AUC of 0.506 versus 0.374–0.387 for the simple baselines, while the highest-risk decile under gradient boosting declined 59.7% of the time versus 36.2% overall. The resulting score ranks pages for human review; it is directional decision support, not evidence of content decay, causal refresh impact, or Google’s ranking rules.</p>
+
+<div class="hero"><b>59.7% vs 19.0%</b><span>Observed decline rate in the highest- versus lowest-risk score decile on the held-out May–June test set. Overall test-set rate: 36.2%.</span></div>
+<div class="metrics" aria-label="Key results">
+  <div class="metric"><strong>0.506</strong><span>Lean logistic PR-AUC · May–June test</span></div>
+  <div class="metric"><strong>0.374–0.387</strong><span>PR-AUC range for simple ranking baselines</span></div>
+  <div class="metric"><strong>17,413</strong><span>Pages scored at the 1 July 2026 cutoff</span></div>
+</div>
+
+<h2 id="problem">1. Problem and decision</h2>
+<p>Editors responsible for large content libraries cannot manually investigate every page each month. The operational question is <em>which pages should be reviewed first</em>—not whether a model can prove that a page is bad, explain Google’s ranking algorithm, or guarantee that an edit will recover traffic.</p>
+<p>The task is a binary classification and ranking problem. For each page and monthly cutoff, estimate the chance of a relative click decline over the following 30 days, then use that score to order a human review queue. The output supports prioritization; it does not automatically recommend rewriting a page.</p>
+
+<h2 id="data">2. Data and panel construction</h2>
+<p>The source is the FlyRank ML Internship warehouse. I queried <code>fact_content_daily_performance</code> and joined <code>dim_content</code> using client and content hash keys. The daily fact contains about 78.8 million rows in the inspected release. For modeling, I retained Search Console observations from 1 September 2025 through 30 June 2026: 26,585,916 rows covering 307,186 distinct content items in the filtered daily extract.</p>
+<ul>
+<li><b>Signals used:</b> daily clicks, impressions, and impression-weighted average position, plus content metadata such as age, word count, search volume, backlinks, competition, content type, and intent.</li>
+<li><b>Eligibility:</b> published, non-deleted content with at least 10 clicks and 100 impressions in the preceding 30-day feature window.</li>
+<li><b>History and availability:</b> clients need at least 60 days of history before the cutoff, observations in the last seven days of the feature window, and observations near the end of the future label window for labeled panels.</li>
+<li><b>Monthly panel:</b> six cutoffs from 1 January through 1 June 2026, growing from 6,153 pages across 16 clients to 17,911 pages across 31 clients.</li>
+<li><b>Scope:</b> GA4 fields were not used. No client names, domains, page URLs, search queries, raw exports, or credentials are included in this public paper.</li>
+</ul>
+<p class="small">A missing daily row is treated as zero activity in the aggregated click/impression windows. This is a modeling assumption, not proof that no real-world activity occurred.</p>
+
+<h2 id="method">3. Methodology</h2>
+<h3>Target definition</h3>
+<p>At cutoff <em>T</em>, all features use dates strictly before <em>T</em>. Let a page’s future-to-prior click ratio be its clicks in days T through T+29 divided by clicks in the prior 30 days. The label is positive when that ratio is at most 75% of the corresponding aggregate ratio for the page’s client. This relative target aims to distinguish page-level underperformance from changes shared by a client’s pages. The absolute-drop alternative was not selected because its monthly positive rate varied substantially more across cutoffs.</p>
+<h3>Features and leakage controls</h3>
+<p>The final ranked score uses 12 features available at the cutoff: last-week click pace, 90-day click volatility, 30-day versus 90-day click level, impression trend, single-day click concentration, CTR change and level, 30-day click trend, click volume, average position and position change, and days with visibility. Feature windows end at the cutoff; future clicks and label-derived ratios are excluded from the feature set. Client-context features in the evaluation model are calculated from the same pre-cutoff window. The final deployed-style ranking uses a lean logistic model to keep the score easier to inspect.</p>
+<h3>Baselines and validation</h3>
+<p>Baselines rank pages using client-adjusted click momentum, the opposite momentum direction, and click-spike size. The primary time split trains on January–March cutoffs, validates on April, and tests on May–June. Model selection and the lean-feature comparison are kept separate from the final May–June score reporting. Training rows are weighted by the inverse square root of each client’s page count to reduce domination by the largest clients. Additional checks use five grouped folds with whole clients held out and a bootstrap that resamples clients for uncertainty intervals.</p>
+<div class="callout"><b>Interpretation rule:</b> the target is an observed relative click pattern. A high score means “inspect this page,” not “this page is definitely decaying” or “refreshing it will improve performance.”</div>
+
+<h2 id="results">4. Results</h2>
+<p>The test set contains the May and June 2026 cutoffs, with a positive-label base rate of 0.362. PR-AUC is the primary metric because the task is to rank likely declines in a population where the positive rate is below one half. The random-ranking reference is the test base rate.</p>
+<figure><div id="prChart"></div><figcaption>Figure 1. Precision–recall AUC on the May–June test cutoffs. Higher is better; the dashed reference marks the 0.362 test-set positive rate. The lean logistic model is the final model variant selected for the ranking workflow.</figcaption></figure>
+<p>The lean logistic model scored 0.506 PR-AUC, compared with 0.502 for the full logistic model, 0.490 for gradient boosting, 0.387 for the client-adjusted momentum baseline, and 0.374 for both the spike-size and sign-flipped momentum baselines. At the 10% review cutoff, the full logistic model’s average precision was 0.610 across the two test cutoffs, against a test base rate of 0.362.</p>
+<figure><div id="decileChart"></div><figcaption>Figure 2. Actual relative-decline rate by gradient-boosting score decile on the test set. Decile 10 has the highest predicted risk. The pattern is strongest at the extremes but is not perfectly monotonic in the middle.</figcaption></figure>
+<p>The highest-risk decile had a 59.7% decline rate, while the lowest-risk decile had a 19.0% rate. The score separates useful extremes, but the mid-deciles overlap: it should be used to prioritize a manageable review list rather than as a precise probability forecast for every page.</p>
+
+<h3>Robustness and diagnostics</h3>
+<div class="tw"><table><thead><tr><th>Check</th><th class="n">Result from notebook</th></tr></thead><tbody>
+<tr><td>Gradient boosting vs. sign-flipped momentum baseline, test PR-AUC difference</td><td class="n">+0.114</td></tr>
+<tr><td>Client-bootstrap 95% interval for that difference</td><td class="n">[0.081, 0.145]</td></tr>
+<tr><td>Held-out-client evaluation</td><td class="n">Model ahead in 5 of 5 folds</td></tr>
+<tr><td>Per-client comparison (15 clients with enough data)</td><td class="n">Model ahead for 87%; median gain +0.092 PR-AUC</td></tr>
+<tr><td>Ablation: all features, gradient boosting</td><td class="n">0.490 PR-AUC</td></tr>
+<tr><td>Ablation: without client-context features</td><td class="n">0.512 PR-AUC</td></tr>
+<tr><td>Ablation: without momentum/spike features</td><td class="n">0.420 PR-AUC</td></tr>
+<tr><td>Ablation: without content metadata</td><td class="n">0.519 PR-AUC</td></tr>
+</tbody></table></div>
+<p>The strongest permutation signals were recent click pace, click volatility, spike size, and impression trend. Removing momentum/spike features reduced PR-AUC from 0.490 to 0.420. Removing client context or content metadata did not reduce the score in this run; those feature groups are not shown to add reliable lift here. The ablation increases should be treated cautiously because the test set is limited and the comparisons are exploratory.</p>
+
+<h2 id="limitations">5. Limitations and honest framing</h2>
+<ul>
+<li><b>Spike reversion may dominate.</b> Volatility, recent pace, and single-day concentration are prominent signals. A flagged page may be returning from an unusually strong period rather than suffering content decay.</li>
+<li><b>Observational, not causal.</b> These results do not show that a content refresh causes click recovery, nor do they reveal Google’s ranking rules.</li>
+<li><b>Uneven client coverage.</b> The panel has 16–31 clients per cutoff, and the five largest clients account for about 67.3% of clicks in the inspected warehouse diagnostics. Results may not generalize to other site types.</li>
+<li><b>Short evaluation horizon.</b> The time-forward test covers two monthly cutoffs. A longer rolling-origin evaluation would be needed to assess stability across seasons and algorithm changes.</li>
+<li><b>Moderate discrimination.</b> The results support triage, not confident page-by-page forecasts. A human should inspect the reasons and page context before making changes.</li>
+<li><b>Refit distinction.</b> The final ranking model is refit on all six labeled cutoffs; May–June metrics are held-out evaluation results, not performance estimates for every page in the final scored population.</li>
+</ul>
+
+<h2 id="playbook">6. Ranked recommendations and action playbook</h2>
+<p>The final lean logistic model was fit on all six labeled cutoffs and applied at the 1 July 2026 cutoff using observations through 30 June. It scored 17,413 eligible pages across 33 clients. Action tiers combine within-client risk rank with recent click volume; they are review priorities, not automated edit instructions.</p>
+<div class="tw"><table><thead><tr><th>Priority</th><th>Action tier</th><th class="n">Pages</th><th class="n">Mean score</th><th>Suggested next step</th></tr></thead><tbody>
+<tr><td>1</td><td><b>Review now</b><br><span class="small">Top 10% risk, higher traffic</span></td><td class="n">600</td><td class="n">0.596</td><td>Inspect recent click pace, volatility, and the page’s search/impression context before editing.</td></tr>
+<tr><td>2</td><td><b>Watch closely</b><br><span class="small">Top 10% risk, lower traffic</span></td><td class="n">1,142</td><td class="n">0.610</td><td>Check again in about two weeks; avoid treating low volume as proof of a problem.</td></tr>
+<tr><td>3</td><td><b>Monitor</b></td><td class="n">3,482</td><td class="n">0.429</td><td>Track in the next monthly report and escalate only if the pattern persists.</td></tr>
+<tr><td>4</td><td><b>Protect</b><br><span class="small">Low risk, higher traffic</span></td><td class="n">2,798</td><td class="n">0.273</td><td>Avoid large edits without a clear issue; preserve pages with meaningful traffic.</td></tr>
+<tr><td>5</td><td><b>No action</b></td><td class="n">9,391</td><td class="n">0.322</td><td>No immediate review based on this score alone.</td></tr>
+</tbody></table></div>
+<p class="small">Counts sum to 17,413 scored pages. Mean scores are model outputs, not calibrated probabilities of causal traffic loss.</p>
+<h3>How to use reason codes</h3>
+<ul>
+<li><b>High click volatility or single-day concentration:</b> check for a temporary event or spike before rewriting the page.</li>
+<li><b>Low last-week click pace:</b> inspect recent impressions and average position, then check indexing or technical issues if the pattern persists.</li>
+<li><b>CTR change:</b> review the title and snippet against current search results, but do not assume CTR alone explains the decline.</li>
+</ul>
+<p>The notebook prints anonymized examples for inspection. This public paper intentionally omits a page-level ranked extract; the full output contains hashed identifiers and stays private.</p>
+
+<h2 id="repro">7. Reproducibility</h2>
+<ul>
+<li><b>Repository:</b> <a href="https://github.com/Subhrajeet-01/flyrank-ml-internship-starter" target="_blank" rel="noopener">flyrank-ml-internship-starter</a>.</li>
+<li><b>Notebook:</b> <code>work/notebooks/capstone.ipynb</code>.</li>
+<li><b>Execution:</b> Python, DuckDB, pandas, NumPy, and scikit-learn; the notebook reads the gated warehouse via <code>hf://</code> and a Hugging Face read token.</li>
+<li><b>Repeatability:</b> fixed model random states and bootstrap seeds are defined in the notebook. Warehouse access requires accepting the dataset gate on Hugging Face and providing a read token privately through Colab Secrets or a prompt.</li>
+<li><b>Privacy:</b> do not commit cache files, raw exports, credentials, or <code>ranked_actions_PRIVATE.csv</code>.</li>
+</ul>
+
+<h2 id="credits">Acknowledgments and data credit</h2>
+<p>Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank ML Internship dataset</a>. Thanks to the FlyRank team for the dataset and starter materials.</p>
+<div class="footer">This paper reports a reproducible internship analysis of a provided warehouse release. All results are descriptive of the evaluated data and should be revalidated before operational use.</div>
+</main>
+<script>
+const NS="http://www.w3.org/2000/svg";
+function svg(w,h,inner,label){return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`}
+(function(){
+ const d=[
+  ["Momentum baseline",.387,"#9aa3b0"],
+  ["Spike-size baseline",.374,"#9aa3b0"],
+  ["Sign-flipped momentum",.374,"#9aa3b0"],
+  ["Full logistic",.502,"#0b6e6e"],
+  ["Lean logistic (selected)",.506,"#0b6e6e"],
+  ["Gradient boosting",.490,"#0b6e6e"]
+ ];
+ const W=680,H=282,L=190,R=50,top=12,row=39,x=v=>L+(v/.6)*(W-L-R);let s='';
+ [0,.2,.4,.6].forEach(v=>{s+=`<line x1="${x(v)}" x2="${x(v)}" y1="0" y2="${H-34}" stroke="#d9dde4"/><text x="${x(v)}" y="${H-14}" font-size="12" text-anchor="middle" fill="#5d6877">${v.toFixed(1)}</text>`});
+ d.forEach((r,i)=>{const y=top+i*row;s+=`<text x="0" y="${y+17}" font-size="12.5" fill="#1b2430">${r[0]}</text><rect x="${L}" y="${y}" width="${x(r[1])-L}" height="23" fill="${r[2]}" rx="3"/><text x="${x(r[1])+6}" y="${y+16}" font-size="12" fill="#1b2430">${r[1].toFixed(3)}</text>`});
+ s+=`<line x1="${x(.362)}" x2="${x(.362)}" y1="0" y2="${H-34}" stroke="#b4531a" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${x(.362)+4}" y="${H-30}" font-size="11" fill="#b4531a">base rate .362</text>`;
+ document.getElementById('prChart').innerHTML=svg(W,H,s,'PR-AUC comparison for baseline and model rankings');
+})();
+(function(){
+ const r=[.190,.246,.352,.354,.306,.330,.365,.405,.475,.597],W=680,H=300,L=38,R=12,T=18,B=55,y=v=>H-B-(v/.7)*(H-B-T),bw=42,g=20;let s='';
+ [0,.2,.4,.6].forEach(v=>{s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#d9dde4"/><text x="${L-7}" y="${y(v)+4}" font-size="11" text-anchor="end" fill="#5d6877">${Math.round(v*100)}%</text>`});
+ r.forEach((v,i)=>{const x=L+12+i*(bw+g);s+=`<rect x="${x}" y="${y(v)}" width="${bw}" height="${H-B-y(v)}" fill="${i===9?'#b4531a':'#0b6e6e'}" rx="3"/><text x="${x+bw/2}" y="${y(v)-6}" font-size="11.5" text-anchor="middle" fill="#1b2430">${(v*100).toFixed(1)}%</text><text x="${x+bw/2}" y="${H-B+18}" font-size="11.5" text-anchor="middle" fill="#5d6877">${i+1}</text>`});
+ s+=`<line x1="${L}" x2="${W-R}" y1="${y(.362)}" y2="${y(.362)}" stroke="#1b2430" stroke-dasharray="5 4"/><text x="${W-R-2}" y="${y(.362)-7}" font-size="11" text-anchor="end" fill="#1b2430">overall 36.2%</text><text x="${(L+W-R)/2}" y="${H-8}" font-size="11.5" text-anchor="middle" fill="#5d6877">Score decile · 10 = highest predicted risk</text>`;
+ document.getElementById('decileChart').innerHTML=svg(W,H,s,'Observed decline rate by gradient-boosting score decile');
+})();
+</script>
+</body></html>
